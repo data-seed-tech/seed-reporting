@@ -88,6 +88,10 @@
         ?>
 
 
+        <br/><hr/><br/>
+        <li><a href='./report.php?app=_system&id=tableUsage'>&#9888; DevOps: tables tools</a></li>
         
     </ul>
+    
+    
 </div>

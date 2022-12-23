@@ -63,11 +63,11 @@ function Save()
 <br/>
 
 <FORM ID=frmForm NAME=frmForm METHOD='post'>
-    <input type="text" id="txtIP" name="txtIP" value="<?php print($ip) ?>">
-    <input type="text" id="txtHostName" name="txtHostName" style="width: 500px" value=""<?php print($hostname) ?>">
-    <input type="button" ID="btnGetHost" ONCLICK='GetHost()' VALUE='&nbsp;&nbsp;&nbsp;GetHost&nbsp;&nbsp;&nbsp;' style="background-color:lightblue">&nbsp;&nbsp;&nbsp;
-    <input type="button" ID="btnSave" ONCLICK='Save()' VALUE='&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;' style="background-color:lightblue">&nbsp;&nbsp;&nbsp;
-    <input type="hidden" ID="hdnFor" NAME="hdnFor">
+    <input type="text" id='txtIP' name='txtIP' value='<?php print($ip) ?>'>
+    <input type="text" id='txtHostName' name='txtHostName' style='width: 500px' value='<?php print($hostname) ?>'>
+    <INPUT TYPE=button ID=btnGetHost ONCLICK='GetHost()' VALUE='&nbsp;&nbsp;&nbsp;GetHost&nbsp;&nbsp;&nbsp;' style="background-color:lightblue">&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE=button ID=btnSave ONCLICK='Save()' VALUE='&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;' style="background-color:lightblue">&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE=hidden ID=hdnFor NAME=hdnFor>
 </form>
 </body>
 </html>

@@ -243,8 +243,6 @@ else
 <div style="border-style: groove; border-width: 1px; border-radius: 3px; background-color: #ffffdc; padding: 5px">
     <a target="_blank" href="report_csv.php?app=<?php print($appCode) ?>&id=<?php print($reportId); ?>">[ Download CSV ]</a>
     
-    &nbsp;
-    <a onclick="javascript:document.getElementById('txaXML').style.display = 'inline';">[ Report as XML ]</a>
     
     &nbsp;
     <a onclick="javascript:document.getElementById('txaSQL').style.display = 'inline';">[ Report SQL ]</a>
@@ -262,7 +260,6 @@ else
 </div>
 
 
-<textarea rows="10" cols='265' id='txaXML' style='display:none;'><?php print($xml->asXML()); ?></textarea><br />
 <textarea rows="10" cols='265' id='txaSQL' style='display:none;'><?php print($query); ?></textarea><br />
 <div id='divDescriere' class='reportDescription' style='display:none;'><?php print(nl2br($reportDescription)); ?></div><br />
 

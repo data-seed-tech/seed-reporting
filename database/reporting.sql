@@ -38,3 +38,49 @@ CREATE TABLE `seed_app_reports` (
   CONSTRAINT `seed_reports_ibfk_1` FOREIGN KEY (`priority`) REFERENCES `seed_priorities` (`priorityId`),
   CONSTRAINT `seed_reports_ibfk_2` FOREIGN KEY (`appCode`) REFERENCES `seed_apps` (`appCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='DATA-SEED Reports';
+
+
+
+CREATE TABLE `hosts` (
+  `hostID` int(11) NOT NULL AUTO_INCREMENT,
+  `IP` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `hostName` varchar(500) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`hostID`),
+  UNIQUE KEY `IP` (`IP`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+INSERT INTO seed_apps (appCode, appName, appDescription, icon)
+VALUES ('count', 'Counter', 'Visitor reports based on the count.inc script', '&#128202;');
+
+
+INSERT INTO seed_menus (menuId, tableName, menuText, appCode)
+VALUES 
+('4', 'seed_app_reports', 'Reports', '_system'),
+('5', 'counter', 'counter', 'count'),
+('6', 'visitors', 'visitors', 'count');
+    
+
+INSERT INTO seed_app_reports (reportId, appCode, reportName, reportDescription, sqlReport, activationCriteria, sqlMinCondition, 
+sqlMaxCondition, slowExecution, priority, linkAddress, linkId, linkDetails, sendEmail)
+VALUES 
+('tableUsage', '_system', 'All tables from the database', 
+'Be very careful with this report! It is very powerful but also dangerous! Do not expose publicly!', 
+'SELECT * FROM information_schema.tables WHERE table_schema = "seed_basic" AND table_type = "BASE TABLE"', 
+'SELECT count(*) as numberOfTables FROM information_schema.tables WHERE table_schema = "seed_basic" AND table_type = "BASE TABLE"', 
+'select 0', 'select 999999999', '0', '1', 'tableUsage.php', 'TABLE_NAME', '', ''),
+
+('visitorsLastDay', 'count', 'Visitors in the last day', 'Visitors in the last day taken from counter table and joined with visitors', 
+'SELECT VisitorID, count(VisitTime) as VisitsToday, FirstVisitTime, MAX(VisitTime) as LastVisitTime, counter.IP as ip, hosts.hostName, visitors.cookie_ok
+FROM counter 
+LEFT JOIN hosts ON counter.IP = hosts.IP
+LEFT JOIN visitors ON counter.VisitorID = visitors.ID
+WHERE DATE(VisitTime) BETWEEN DATE(NOW() - INTERVAL 1 DAY) AND CURDATE()
+GROUP BY counter.IP
+ORDER BY MAX(counter.VisitTime)', 
+'SELECT count(VisitTime) as VisitsToday
+FROM counter
+WHERE DATE(VisitTime) BETWEEN DATE(NOW() - INTERVAL 1 DAY) AND CURDATE()', 
+'select 1', 'select 99999999999', '0', '1', './count/host.php', 'ip', '', '');
+    
+
