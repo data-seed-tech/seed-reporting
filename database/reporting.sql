@@ -61,26 +61,17 @@ VALUES
 ('6', 'visitors', 'visitors', 'count');
     
 
-INSERT INTO seed_app_reports (reportId, appCode, reportName, reportDescription, sqlReport, activationCriteria, sqlMinCondition, 
-sqlMaxCondition, slowExecution, priority, linkAddress, linkId, linkDetails, sendEmail)
-VALUES 
-('tableUsage', '_system', 'All tables from the database', 
-'Be very careful with this report! It is very powerful but also dangerous! Do not expose publicly!', 
-'SELECT * FROM information_schema.tables WHERE table_schema = "seed_basic" AND table_type = "BASE TABLE"', 
-'SELECT count(*) as numberOfTables FROM information_schema.tables WHERE table_schema = "seed_basic" AND table_type = "BASE TABLE"', 
-'select 0', 'select 999999999', '0', '1', 'tableUsage.php', 'TABLE_NAME', '', ''),
-
-('visitorsLastDay', 'count', 'Visitors in the last day', 'Visitors in the last day taken from counter table and joined with visitors', 
-'SELECT VisitorID, count(VisitTime) as VisitsToday, FirstVisitTime, MAX(VisitTime) as LastVisitTime, counter.IP as ip, hosts.hostName, visitors.cookie_ok
+INSERT INTO records (reportId, appCode, reportName, reportDescription, sqlReport, activationCriteria, sqlMinCondition, sqlMaxCondition, slowExecution, priority, linkAddress, linkId, linkDetails, sendEmail)
+VALUES ('tableUsage', '_system', 'Database utility', 'Be very careful with this report! Do not expose it public!
+YOU SHOULD REPLACE: table_schema = "your_database_name". OTHERWISE IT WONT WORK!!!', 'SELECT * FROM information_schema.tables WHERE table_schema = "u40448data_dataseed" AND table_type = "BASE TABLE"', 'SELECT count(*) as numberOfTables FROM information_schema.tables WHERE table_schema = "u40448data_dataseed" AND table_type = "BASE TABLE"', 'select 0', 'select 999999999', '0', '1', 'tableUsage.php', 'TABLE_NAME', '', ''),
+('visitorsLastDay', 'count', 'Visits today', 'Visits in the last day taken from counter table and joined with visitors', 'SELECT VisitorID, count(VisitTime) as VisitsToday, FirstVisitTime, MAX(VisitTime) as LastVisitTime, counter.IP as ip, hosts.hostName, visitors.cookie_ok
 FROM counter 
 LEFT JOIN hosts ON counter.IP = hosts.IP
 LEFT JOIN visitors ON counter.VisitorID = visitors.ID
 WHERE DATE(VisitTime) BETWEEN DATE(NOW() - INTERVAL 1 DAY) AND CURDATE()
 GROUP BY counter.IP
-ORDER BY MAX(counter.VisitTime)', 
-'SELECT count(VisitTime) as VisitsToday
+ORDER BY VisitsToday DESC', 'SELECT count(VisitTime) as VisitsToday
 FROM counter
-WHERE DATE(VisitTime) BETWEEN DATE(NOW() - INTERVAL 1 DAY) AND CURDATE()', 
-'select 1', 'select 99999999999', '0', '1', './count/host.php', 'ip', '', '');
+WHERE DATE(VisitTime) BETWEEN DATE(NOW() - INTERVAL 1 DAY) AND CURDATE()', 'select 1', 'select 99999999999', '0', '1', './count/host.php', 'ip', '', '');
     
 
