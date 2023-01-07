@@ -316,37 +316,6 @@ return $xsl_object;
 
 
 
-function GetXSLCanonical($root_element_name = 'records', $element_name = 'record')
-{
-    //pune rezultatul unui SELECT intr-un XML cu lista/element in locul $root_element_name si $element_name
-    // NU FUNCTIONEAZA BINE  --> trebuie doar sa faca replace la $root_element_name cu 'lista' si la $element_name cu 'element'
-$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\r";
-$xml = $xml . "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n\r";
-$xml = $xml . "<xsl:output method=\"html\"/>\n\r";
-$xml = $xml . "    <xsl:template match=\"/\">\n\r";
-$xml = $xml . "                    <lista>\n\r";
-$xml = $xml . "                        <xsl:for-each select=\"/" . $root_element_name . "/" . $element_name . "\">\n\r";
-$xml = $xml . "                        <element>\n\r";
-$xml = $xml . "                          <xsl:for-each select=\"./*\">\n\r";
-$xml = $xml . "                            <xsl:value-of select=\"name(.)\"/><xsl:value-of select=\".\"/><xsl:value-of select=\"name(.)\"/>\n\r";
-$xml = $xml . "                          </xsl:for-each>\n\r";
-$xml = $xml . "                        </element>\n\r";
-$xml = $xml . "                        </xsl:for-each>\n\r";
-$xml = $xml . "                    </lista>\n\r";
-$xml = $xml . "    </xsl:template>\n\r";
-$xml = $xml . "</xsl:stylesheet>";
-
-
-//print $xml;
-$xsl_object = new SimpleXMLElement($xml);
-//print_r($xsl_object);
-return $xsl_object;
-}
-
-
-
-
-
 function PrintXMLfromQuery($conn, $query, $root_element_name = 'records', $element_name = 'record')
 {
 // LOOP PRIN INREGISTRARI:
@@ -391,80 +360,23 @@ print $xml;
 
 
 
-
-
-// GetXSLInsertForm e INUTIL
-function GetXSLInsertForm($root_element_name = 'records', $element_name = 'record')
+function PrintHTMLfromQuery($conn, $query)
 {
-$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
-   <xsl:output method=\"html\"/>
-       <xsl:template match=\"/\">
-            <form method=\"post\">            
-            <table class=\"form_table\">
-                <tr>
-                    <th>#</th>
-                    <th colspan=\"4\">" . $root_element_name . "</th>
-                </tr>
-                <xsl:for-each select=\"/" . $root_element_name . "/" . $element_name . "\">
-                <tr>
-                    <td><xsl:value-of select=\"position()\"/></td>
-                    <td><xsl:value-of select=\"COLUMN_NAME\"/></td>
-                                 
-                    <td>
-                        <xsl:choose>
-                            <xsl:when test=\"DATA_TYPE = 'TBD'\">
-                                <xsl:element name=\"a\">
-                                    <xsl:attribute name=\"target\">_blank</xsl:attribute>
-                                    <xsl:attribute name=\"href\">./TO BE REPLACED?TO BE REPLACED=<xsl:value-of select=\".\" />&amp;id_raport=TO BE REPLACED</xsl:attribute>
-                                    <xsl:value-of select=\".\" />
-                                </xsl:element>
-                            </xsl:when>
-                            <xsl:when test=\"DATA_TYPE = 'varchar'\">
-                                <xsl:element name=\"textarea\">
-                                    <xsl:attribute name=\"id\"><xsl:value-of select=\"DATA_TYPE\" /><xsl:value-of select=\"ORDINAL_POSITION\" /></xsl:attribute>
-                                    <xsl:attribute name=\"rows\" value=\"8\" />
-                                    <xsl:attribute name=\"cols\" value=\"100\" />
-                                    <xsl:value-of select=\"COLUMN_DEFAULT\" />
-                                </xsl:element>
-                            </xsl:when>
-                            <xsl:when test=\"DATA_TYPE = 'date'\">
-                                <xsl:element name=\"input\">
-                                    <xsl:attribute name=\"type\">date</xsl:attribute>
-                                    <xsl:attribute name=\"id\"><xsl:value-of select=\"DATA_TYPE\" /><xsl:value-of select=\"ORDINAL_POSITION\" /></xsl:attribute>
-                                </xsl:element>
-                            </xsl:when>
-                            <xsl:when test=\"DATA_TYPE = 'decimal'\">
-                                <xsl:element name=\"input\">
-                                    <xsl:attribute name=\"type\">number</xsl:attribute>
-                                    <xsl:attribute name=\"id\"><xsl:value-of select=\"DATA_TYPE\" /><xsl:value-of select=\"ORDINAL_POSITION\" /></xsl:attribute>
-                                    <xsl:value-of select=\"COLUMN_DEFAULT\" />
-                                </xsl:element>
-                            </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select=\"Type\"/>
-                        </xsl:otherwise>
-                        </xsl:choose>
-                    </td>
-                    <td>
-                        <xsl:value-of select=\"COLUMN_COMMENT\"/>
-                    </td>
-                </tr>
-                </xsl:for-each>
-            </table>
-            </form>
-       </xsl:template>
-   </xsl:stylesheet>";
+    $xml = GetXMLfromQuery($conn, $query);
+    //print_r ($xml);
 
+    $proc = new XSLTProcessor();
 
-//print $xml;                                                       // PENTRU DEBUG
+    //$xslTable = GetXSLTable($table_parent, $table_parent, 'entityEdit.php', $parentIdColumnFK, "&amp;app=".$appCode."&amp;table=".$table_parent, "_self");
+    $xslTable = GetXSLTable();
+    //print ($xslTable);
 
-$xsl_object = new SimpleXMLElement($xml);
-//print_r($xsl_object);
-return $xsl_object;
+    $proc->importStyleSheet($xslTable);
+    $xmlTable = $proc->transformToXML($xml);
+
+    print ($xmlTable);
+    print ("<br /><br />");
 }
-
-
 
 
 function GetXSLEditForm($table, $coloane, $valori, $parentIdColumn = '', $parentIdValue = '', $conn = null, $appCode = '')
@@ -919,3 +831,5 @@ function GetHTMLSelect($conn, $table, $id_value, $readonly = false)
     //print($sel);
     return $sel;
 }
+
+

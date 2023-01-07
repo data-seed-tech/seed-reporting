@@ -244,10 +244,6 @@ else
     <a target="_blank" href="report_csv.php?app=<?php print($appCode) ?>&id=<?php print($reportId); ?>">[ Download CSV ]</a>
     
     
-    &nbsp;
-    <a onclick="javascript:document.getElementById('txaSQL').style.display = 'inline';">[ Report SQL ]</a>
-    
-    
     
     &nbsp;
     <a href="#" onclick="javascript:document.getElementById('divTotaluri').style.display = 'inline-block';" title='Totals applies just to current page!'>[ &#8721; Totals ]</a> 
@@ -260,7 +256,7 @@ else
 </div>
 
 
-<textarea rows="10" cols='265' id='txaSQL' style='display:none;'><?php print($query); ?></textarea><br />
+
 <div id='divDescriere' class='reportDescription' style='display:none;'><?php print(nl2br($reportDescription)); ?></div><br />
 
     
