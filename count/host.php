@@ -53,12 +53,16 @@ function Save()
 </head>
     
 <body>
-<TABLE width="100%" cellpadding="3" cellspacing="0" class='clsFineBorder' style="text-align: center">
+<TABLE width="100%" cellpadding="3" cellspacing="0" class='clsFineBorder'>
 	<tr>
-            <TD bgcolor="#e6f2ff" style="text-align: center">
+            <td bgcolor="#e6f2ff" style="text-align:center">
                 <?php print("&nbsp;".$msg) ?>
-            </TD>
-	</TR>
+            </td>
+	    <td bgcolor="#e6f2ff" style="text-align:right">
+                <a href="./update_host.php">Bulk Update</a>
+                &nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
 </TABLE>
 <br/>
 

@@ -11,23 +11,23 @@ if($limit == '')
 
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-    <title>Update iterativ pe campul hostName din tabela vizitatori</title>
+    <title>Update iterativ pe campul hostName din tabela visitors</title>
+    <link rel="stylesheet" type="text/css" href="../styles.css">
 </head>
 <body>
-<?php require_once("header.inc"); ?>
+<?php //require_once("header.inc"); ?>
 <div class="container">
     <?php //require_once("meniu_stg.inc"); ?>
     <?php //require_once("meniu_dr.inc"); ?>
-    <?php require_once("meniu.inc"); ?>
+    <?php //require_once("../menu.inc"); ?>
     
-    <h1>Update iterativ pe campul hostName din tabela vizitatori</h1>
+    <h1>Update iterativ pe campul hostName din tabela visitors</h1>
 
 <?php
 $azi = date('20y-m-d');
-$query = "SELECT DISTINCT vizitatori.IP
-            FROM vizitatori 
-            WHERE vizitatori.IP NOT IN (SELECT IP FROM hosturi)
+$query = "SELECT DISTINCT visitors.IP
+            FROM visitors 
+            WHERE visitors.IP NOT IN (SELECT IP FROM hosts)
             LIMIT " . $limit . ";";
 //print $query;
 
@@ -68,7 +68,7 @@ while ($row = $result ->fetch_object())
 
     $hostname = gethostbyaddr($IP);
     
-    $query1 = "INSERT INTO hosturi (IP, hostName) VALUES ('". $IP."', '". $hostname."');"; 
+    $query1 = "INSERT INTO hosts (IP, hostName) VALUES ('". $IP."', '". $hostname."');"; 
     //print($query1);
     $result1 = $conn -> query($query1);
     
@@ -105,10 +105,10 @@ while ($row = $result ->fetch_object())
 </table>
 
 <br/><br/>
-&#9432; Raportul afiseaza un numar limitat de vizitatori pentru ca daca punem multe se incarca greu (de la functia <code>gethostbyaddr</code>)
+&#9432; Raportul afiseaza un numar limitat de visitors pentru ca daca punem multe se incarca greu (de la functia <code>gethostbyaddr</code>)
      
 <br><br><br><br><br>
-<?php require_once("footer.inc"); ?>
+<?php //require_once("footer.inc"); ?>
 </div>
 </body>
 </html>
