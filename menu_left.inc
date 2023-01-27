@@ -80,8 +80,9 @@
             while($row_menu = $result_menu -> fetch_object())
             {
                 $menuItem = $row_menu->tableName;
+                $filterText = $row_menu->filterText;
                 ?>
-            <li <?php if($row_menu->tableName == $table) {print("class='selectat'");} ?>><a href='./entityView.php?app=<?php print($appCode1); ?>&table=<?php print($menuItem); ?>' title="Filter by <?php print($menuItem); ?>">&#9889; <?php print($menuText); ?></a></li>
+            <li <?php if($row_menu->tableName == $table) {print("class='selectat'");} ?>><a href='./entityView.php?app=<?php print($appCode1); ?>&table=<?php print($menuItem); ?>' title="Filter by <?php print($menuItem); ?>">&#9889; <?php print($filterText); ?></a></li>
             <?php
             }
         }
