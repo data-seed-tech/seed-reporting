@@ -528,7 +528,7 @@ else
     $query = "SELECT * FROM " . $table_parent . " WHERE " . $parentIdColumnFK . " = '" . $parentIdValue . "';";
     //print('aaa');
 
-    // VINE DIN xml_functions.inc
+    //defined in xml_functions.inc
     $xml = GetXMLfromQuery($conn, $query, $table_parent, $table_parent);
     //print_r ($xml);
     //print ($xml);
@@ -634,17 +634,14 @@ while($row = $result -> fetch_array(MYSQLI_ASSOC))
 {
     $coloane[] = $row;
 }
-//$coloane = (array)$result;
-//$coloane = $row;
+
 
 //print_r($coloane);
 
-// VINE DIN xml_functions.inc
+//defined in xml_functions.inc
 $xml = GetXMLfromQuery($conn, $query, $table, $table);
 //print_r ($xml);
-//print('aaa');
-//print($xml);
-//print('aaa');
+
 
 $proc = new XSLTProcessor();
 
@@ -656,9 +653,6 @@ $query = "SELECT * FROM " . $table . " WHERE " . $id_name . " = '" . $id_value .
 $result = $conn -> query($query);
 $row = $result -> fetch_object();
 $valori = (array)$row;
-//print($a['biletId']);
-//print(sizeof($valori));
-//print('aaa');
 //$xslTable = GetXSLInsertForm($table, $table);
 $xslTable = GetXSLEditForm($table, $coloane, $valori, $parentIdColumn, $parentIdValue, $conn, $appCode);
 
@@ -670,7 +664,7 @@ print ($xmlTable);
 ?>
     <br /><br />
     <input type="button" name="btnAddNew" onclick="AddNew()" VALUE=" Add  &#128396;">&nbsp;&nbsp;&nbsp;
-    <input type="button" name="btnDelete" onclick="Delete('<?php print($id_value) ?>')" value="Delete">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" name="btnDelete" onclick="Delete('<?php print($id_value) ?>')" value="Delete &#128683;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     
     <input type="button" name="btnSave" class='button_default' onclick='Save()' value=' Save  &#128190;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     
@@ -680,7 +674,7 @@ print ($xmlTable);
     if($table_parent != "")
     {
     ?>
-    <b><a class='entity_name' href='entityView.php?app=<?php print($appCode); ?>&table=<?php print($table); ?>&parent=<?php print($table_parent); ?>&<?php print($id_name); ?>=<?php print($id_value); ?>'>Back to <?php print($table); ?></a></b>
+    <span style="float:right;"><b><a class='entity_name' href='entityView.php?app=<?php print($appCode); ?>&table=<?php print($table); ?>&parent=<?php print($table_parent); ?>&<?php print($id_name); ?>=<?php print($id_value); ?>'>Back to <?php print($table); ?></a></b></span>
     <?php
     }
     ?>
