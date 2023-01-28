@@ -416,9 +416,11 @@ foreach($coloane as $coloana)
     //print($coloana['COLUMN_NAME']."=".$valori[$coloana['COLUMN_NAME']].";");
     
     $element = $element . "<td>";
-    switch ($coloana['DATA_TYPE']) 
-    {
-        case "varchar":
+    //print("aaa". $coloana['DATA_TYPE']);
+    
+    
+        if($coloana['DATA_TYPE'] == "varchar")
+        {
             if($coloana['CHARACTER_MAXIMUM_LENGTH'] < 100)
             {
                 //print("aaa");
@@ -473,6 +475,25 @@ foreach($coloane as $coloana)
                                                <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
                     $element = $element . "    <xsl:attribute name=\"value\">".htmlspecialchars($valori[$coloana['COLUMN_NAME']])."</xsl:attribute>";
                     $element = $element . "    <xsl:attribute name=\"maxlength\">".$coloana['CHARACTER_MAXIMUM_LENGTH']."</xsl:attribute>";
+                    #$width = 100;
+                    if($coloana['CHARACTER_MAXIMUM_LENGTH'] <= 10)
+                    {
+                        $width = 30;
+                    }
+                    elseif(11 <= $coloana['CHARACTER_MAXIMUM_LENGTH'] && $coloana['CHARACTER_MAXIMUM_LENGTH'] < 31)
+                    {
+                        $width = 50;
+                    }
+                    elseif(31 <= $coloana['CHARACTER_MAXIMUM_LENGTH'] && $coloana['CHARACTER_MAXIMUM_LENGTH'] < 51)
+                    {
+                        $width = 100;
+                    }
+                    elseif(51 <= $coloana['CHARACTER_MAXIMUM_LENGTH'] && $coloana['CHARACTER_MAXIMUM_LENGTH'] < 100)
+                    {
+                        $width = 400;
+                    }
+                    
+                    $element = $element . "    <xsl:attribute name=\"style\">width:".$width."px</xsl:attribute>";
                     //$element = $element . "</xsl:element>";
                     //print("qqqqqqqq");
                 }
@@ -481,13 +502,14 @@ foreach($coloane as $coloana)
             {
                 $element = $element . "<xsl:element name=\"textarea\">";
                 $element = $element . "     <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
-                $element = $element . "     <xsl:attribute name=\"rows\">8</xsl:attribute>";
-                $element = $element . "     <xsl:attribute name=\"cols\">100</xsl:attribute>";
+                $element = $element . "     <xsl:attribute name=\"rows\">5</xsl:attribute>";
+                $element = $element . "     <xsl:attribute name=\"cols\">70</xsl:attribute>";
                 $element = $element . htmlspecialchars($valori[$coloana['COLUMN_NAME']]);
                 //$element = $element . "</xsl:element>";
             }
-            break;
-        case "char":
+        }
+        elseif($coloana['DATA_TYPE'] == "char")
+        {
             if($coloana['REFERENCED_TABLE_NAME'] != "")
             {
                 //print("aaa");
@@ -540,16 +562,18 @@ foreach($coloane as $coloana)
                 $element = $element . "    <xsl:attribute name=\"maxlength\">".$coloana['CHARACTER_MAXIMUM_LENGTH']."</xsl:attribute>";
                 //$element = $element . "</xsl:element>";
             }
-            break;
-        case "date":
+        }
+        elseif($coloana['DATA_TYPE'] == "date")
+        {
             $element = $element . "<xsl:element name=\"input\">";
             $element = $element . "    <xsl:attribute name=\"type\">date</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
             $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
             //$element = $element . "</xsl:element>";
-            break;
-        case "int" or "smallint" or "tinyint":
-            //print("aaa");
+        }
+        elseif($coloana['DATA_TYPE'] == "int" || $coloana['DATA_TYPE'] == "smallint" || $coloana['DATA_TYPE'] == "tinyint")
+        {
+            //print("aaa". $coloana['DATA_TYPE']);
             if($coloana['REFERENCED_TABLE_NAME'] != "")
             {
                 //print("aaa");
@@ -601,28 +625,40 @@ foreach($coloane as $coloana)
                 $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
                 //$element = $element . "</xsl:element>";
             }
-            break;
-        case "decimal":
+        }
+        elseif($coloana['DATA_TYPE'] == "decimal")
+        {
+            //print("bbb". $coloana['DATA_TYPE']);
             $element = $element . "<xsl:element name=\"input\">";
             $element = $element . "    <xsl:attribute name=\"type\">number</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
             $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+            $element = $element . "    <xsl:attribute name=\"style\">width:100px;text-align: right;</xsl:attribute>";
             //$element = $element . "</xsl:element>";
-            break;
-        case "boolean":
+        }
+        elseif($coloana['DATA_TYPE'] == "boolean")
+        {
+            print("bbb". $coloana['DATA_TYPE']);
             $element = $element . "<xsl:element name=\"input\">";
             $element = $element . "    <xsl:attribute name=\"type\">checkbox</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
             $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
             //$element = $element . "</xsl:element>";
-            break;
-        default:
+        }
+        else
+        {
+            //print("aaa");
             $element = $element . "<xsl:element name=\"input\">";
             $element = $element . "    <xsl:attribute name=\"type\">text</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
             $element = $element . "    <xsl:attribute name=\"value\">".htmlspecialchars($valori[$coloana['COLUMN_NAME']])."</xsl:attribute>";
+            //$element = $element . "    <xsl:attribute name=\"style\">width:100px</xsl:attribute>";
             //$element = $element . "</xsl:element>";
-    }
+        }
+    
+    
+    
+    
     $sfat = "";
     $sfat_text = "";
     $readonly = false;
@@ -819,11 +855,25 @@ function GetHTMLSelect($conn, $table, $id_value, $readonly = false)
         //print($coloana[$id_name]);
         if($coloana[$id_name] === $id_value)
         {
-            $sel = $sel . "<option value=\"".$coloana[$id_name]."\" selected=\"true\">".htmlspecialchars($coloana[$displayable_name])."</option>";
+            if(is_numeric($coloana[$id_name]))
+            {
+                $sel = $sel . "<option value=\"".$coloana[$id_name]."\" selected=\"true\">"."(".$id_value.") ".htmlspecialchars($coloana[$displayable_name])."</option>";
+            }
+            else
+            {
+                $sel = $sel . "<option value=\"".$coloana[$id_name]."\" selected=\"true\">".htmlspecialchars($coloana[$displayable_name])."</option>";
+            }
         }
         else
         {
-            $sel = $sel . "<option value=\"".$coloana[$id_name]."\">".htmlspecialchars($coloana[$displayable_name])."</option>";
+            if(is_numeric($coloana[$id_name]))
+            {
+                $sel = $sel . "<option value=\"".$coloana[$id_name]."\">"."(".$coloana[$id_name].") ".htmlspecialchars($coloana[$displayable_name])."</option>";
+            }
+            else
+            {
+                $sel = $sel . "<option value=\"".$coloana[$id_name]."\">".htmlspecialchars($coloana[$displayable_name])."</option>";
+            }
         }
     }
     //$sel = $sel . "</select>";

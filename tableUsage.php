@@ -91,7 +91,7 @@ function Test()
 <?php
 if($query != "")
 {
-    // VINE DIN xml_functions.inc
+    // defined in xml_functions.inc
     $xml = GetXMLfromQuery($conn, $query, $root_element_name, $element_name);
     //print_r ($xml);
 
