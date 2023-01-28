@@ -569,6 +569,7 @@ foreach($coloane as $coloana)
             $element = $element . "    <xsl:attribute name=\"type\">date</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
             $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+            
             //$element = $element . "</xsl:element>";
         }
         elseif($coloana['DATA_TYPE'] == "int" || $coloana['DATA_TYPE'] == "smallint" || $coloana['DATA_TYPE'] == "tinyint")
@@ -622,7 +623,15 @@ foreach($coloane as $coloana)
                 $element = $element . "<xsl:element name=\"input\">";
                 $element = $element . "    <xsl:attribute name=\"type\">number</xsl:attribute>
                                            <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
-                $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+                if($valori[$coloana['COLUMN_NAME']] != '')
+                {
+                    $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+                }
+                else
+                {
+                    $element = $element . "    <xsl:attribute name=\"value\">".$coloana['COLUMN_DEFAULT']."</xsl:attribute>";
+                }
+                $element = $element . "    <xsl:attribute name=\"style\">width:50px;text-align: right;</xsl:attribute>";
                 //$element = $element . "</xsl:element>";
             }
         }
@@ -632,7 +641,15 @@ foreach($coloane as $coloana)
             $element = $element . "<xsl:element name=\"input\">";
             $element = $element . "    <xsl:attribute name=\"type\">number</xsl:attribute>
                                        <xsl:attribute name=\"name\">".$coloana['COLUMN_NAME']."_".$coloana['DATA_TYPE'].$coloana['ORDINAL_POSITION']."</xsl:attribute>";
-            $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+            if($valori[$coloana['COLUMN_NAME']] != '')
+            {
+                $element = $element . "    <xsl:attribute name=\"value\">".$valori[$coloana['COLUMN_NAME']]."</xsl:attribute>";
+            }
+            else
+            {
+                $element = $element . "    <xsl:attribute name=\"value\">".$coloana['COLUMN_DEFAULT']."</xsl:attribute>";
+            }
+            
             $element = $element . "    <xsl:attribute name=\"style\">width:100px;text-align: right;</xsl:attribute>";
             //$element = $element . "</xsl:element>";
         }
