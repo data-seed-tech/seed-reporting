@@ -77,9 +77,11 @@ $appIcon = $row->icon;
                 $query_table = "SELECT TABLE_COMMENT
                             FROM information_schema.tables 
                             WHERE table_name = '" . $tableName . "';";
+                //print($query_table);
                 $result_table = $conn -> query($query_table);
                 $row_table = $result_table -> fetch_object();
-                print($row_table->TABLE_COMMENT);
+                print(substr($row_table->TABLE_COMMENT, 0, 30) . "...");
+                //print($row_table->TABLE_COMMENT);
                 ?>
             </div>&nbsp;&nbsp;&nbsp;&nbsp;
         <?php

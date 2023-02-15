@@ -12,7 +12,7 @@ else
 //print($sel_reports);
 
 $result_reports  = $conn -> query($sel_reports);
-//$err =   $conn->error;
+ //print($conn->error);
 $alert_max = "";
 ?>
 <table class="xml_table">
@@ -118,4 +118,4 @@ $alert_max = "";
 print("[+] <a href='entityEdit.php?app=".$appCode."&parent=seed_apps&amp;parentId=".$appCode."&amp;table=seed_app_reports'>Add new report</a>");
 ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<div>
+</div>

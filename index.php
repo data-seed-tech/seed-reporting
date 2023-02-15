@@ -44,7 +44,7 @@ $table = "";
         <div class="card" onclick="javascript:location.href='indexApp.php?app=<?php print ($appCode); ?>';" title="<?php print ($appDescription); ?>">
             <div class="valoare_buna"><?php print ($icon); ?> <?php print ($appName); ?></div><br/>
             
-            <?php print ($appDescription); ?>
+            <?php print(substr($appDescription, 0, 30) . "..."); ?>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <?php
     }
