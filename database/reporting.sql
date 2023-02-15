@@ -51,26 +51,28 @@ CREATE TABLE `hosts` (
 
 
 CREATE TABLE `visitors` (
-  `ID` int NOT NULL,
+  `ID` int NOT NULL AUTO_INCREMENT,
   `SessionID` varchar(250) NOT NULL,
   `FirstVisitTime` datetime DEFAULT NULL,
   `IP` varchar(100) DEFAULT NULL,
   `Page` varchar(100) DEFAULT NULL,
   `Referrer` varchar(255) DEFAULT NULL,
   `RemoteHost` varchar(500) DEFAULT NULL,
-  `cookie_ok` tinyint DEFAULT NULL
+  `cookie_ok` tinyint DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COLLATE=utf8mb4_unicode_ci;
 
 
 CREATE TABLE `counter` (
-  `ID` int NOT NULL,
+  `ID` int NOT NULL AUTO_INCREMENT,
   `VisitorID` bigint NOT NULL,
   `SessionID` varchar(250) NOT NULL,
   `VisitTime` datetime DEFAULT NULL,
   `IP` varchar(100) CHARACTER SET armscii8 DEFAULT NULL,
   `Page` varchar(100) CHARACTER SET ascii DEFAULT NULL,
   `Referrer` varchar(255) CHARACTER SET armscii8 DEFAULT NULL,
-  `RemoteHost` varchar(250) NOT NULL
+  `RemoteHost` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB CHARSET=UTF8MB4 COLLATE=utf8mb4_unicode_ci;
 
 
