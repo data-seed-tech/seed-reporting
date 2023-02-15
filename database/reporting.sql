@@ -50,6 +50,31 @@ CREATE TABLE `hosts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COLLATE=utf8mb4_unicode_ci COMMENT='Hosts recorder in the database';
 
 
+CREATE TABLE `visitors` (
+  `ID` int NOT NULL,
+  `SessionID` varchar(250) NOT NULL,
+  `FirstVisitTime` datetime DEFAULT NULL,
+  `IP` varchar(100) DEFAULT NULL,
+  `Page` varchar(100) DEFAULT NULL,
+  `Referrer` varchar(255) DEFAULT NULL,
+  `RemoteHost` varchar(500) DEFAULT NULL,
+  `cookie_ok` tinyint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `counter` (
+  `ID` int NOT NULL,
+  `VisitorID` bigint NOT NULL,
+  `SessionID` varchar(250) NOT NULL,
+  `VisitTime` datetime DEFAULT NULL,
+  `IP` varchar(100) CHARACTER SET armscii8 DEFAULT NULL,
+  `Page` varchar(100) CHARACTER SET ascii DEFAULT NULL,
+  `Referrer` varchar(255) CHARACTER SET armscii8 DEFAULT NULL,
+  `RemoteHost` varchar(250) NOT NULL
+) ENGINE=InnoDB CHARSET=UTF8MB4 COLLATE=utf8mb4_unicode_ci;
+
+
+
 INSERT INTO seed_apps (appCode, appName, appDescription, icon)
 VALUES ('count', 'Counter', 'Visitor reports based on the count.inc script', '&#128202;');
 
@@ -60,6 +85,10 @@ VALUES
 ('5', 'counter', 'counter', 'count'),
 ('6', 'visitors', 'visitors', 'count');
     
+
+
+
+
 
 INSERT INTO seed_app_reports(reportId, appCode, reportName, reportDescription, sqlReport, activationCriteria, sqlMinCondition, sqlMaxCondition, slowExecution, priority, linkAddress, linkId, linkDetails, sendEmail)
 VALUES ('tableUsage', '_system', 'Database utility', 'Be very careful with this report! Do not expose it public!
