@@ -112,7 +112,8 @@ if($for == "SAVE")
         $query = "SELECT COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, COLUMN_KEY, EXTRA, COLUMN_COMMENT
                 FROM INFORMATION_SCHEMA.COLUMNS
                 WHERE table_schema = '" . $current_schema . "'
-                  AND table_name = '" . $table . "';";
+                  AND table_name = '" . $table . "'
+                  ORDER BY ORDINAL_POSITION;";
         //print $query;
         $result = $conn -> query($query);
         //print($result->num_rows);
