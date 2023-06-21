@@ -433,6 +433,46 @@ else
 
 </div>
 <?php require_once("menu_right.inc"); ?>
+    
+    
+    
+<div class="right">
+    &#128200; Entity reports:
+    <hr/>
+    <ul>
+    <?php
+    $query = "SELECT * FROM seed_entity_view_reports WHERE `table` = '".$table."'";
+    //print($query);
+    $result = $conn -> query($query);
+    while($row = $result -> fetch_object())
+    {
+        //$query_entity_view_report = $row->sqlReport;
+        $query_entity_view_report = str_replace('???', $id_value, $row->sqlReport);
+        //print($query_entity_view_report);
+        
+        print("<li>". $row->description);
+        print(" <font color=lightgray>[". $query_entity_view_report . "]</font>");
+        //$xml = GetXMLfromQuery($conn, $query_entity_view_report, 'items', 'item');
+        $xml = GetXMLfromQuery($conn, $query_entity_view_report, 'items', 'item');
+        $proc = new XSLTProcessor();
+        
+        //$xslTabel = GetXSLTable('items', 'item');
+        $xslTabel = GetXSLTable('items', 'item', 'entityEdit.php', $parentIdColumnFK, "&amp;app=".$appCode."&amp;table=".$table_parent, "_self");
+        $proc->importStyleSheet($xslTabel);
+        //$xmlTabel = $proc->transformToXML($xmlPre);
+        $xmlTabel = $proc->transformToXML($xml);
+
+        print ($xmlTabel);
+        print("<br/>");
+    }
+    ?>
+    </ul>
+    <br/>
+    <div style="text-align: right;font-size:8px">
+        [+] <a target='_blank' href='./entityEdit.php?app=_system&table=seed_entity_view_reports'>Add</a>&nbsp;
+    </div>
+    <br/><br/>
+</div>
 </div>
 
 </body>

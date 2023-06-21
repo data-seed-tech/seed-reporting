@@ -47,9 +47,11 @@ $query = "SELECT COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DAT
             AND COLUMN_KEY = 'PRI';";
 //print($query);
 $result = $conn -> query($query);
-$row = $result -> fetch_object();
-$id_name = $row->COLUMN_NAME;
-//print($id_name);
+if($row = $result -> fetch_object())
+{
+    $id_name = $row->COLUMN_NAME;
+    //print($id_name);
+}
 
 /////////////////////////////////////
 //              id_value           //
@@ -797,6 +799,44 @@ while($row = $result -> fetch_object())
 
 </div>
 <?php require_once("menu_right.inc"); ?>
+<div class="right">
+    &#128200; Entity item reports:
+    <hr/>
+    <ul>
+    <?php
+    $query = "SELECT * FROM seed_entity_item_reports WHERE `table` = '".$table."'";
+    //print($query);
+    $result = $conn -> query($query);
+    while($row = $result -> fetch_object())
+    {
+        //$query_entity_item_report = $row->sqlReport;
+        $query_entity_item_report = str_replace('???', $id_value, $row->sqlReport);
+        //print($query_entity_item_report);
+        
+        print("<li>". $row->description);
+        print(" <font color=lightgray>[". $query_entity_item_report . "]</font>");
+        //$xml = GetXMLfromQuery($conn, $query_entity_item_report, 'items', 'item');
+        $xml = GetXMLfromQuery($conn, $query_entity_item_report, 'items', 'item');
+        $proc = new XSLTProcessor();
+        
+        //$xslTabel = GetXSLTable('items', 'item');
+        $xslTabel = GetXSLTable('items', 'item', 'entityEdit.php', $parentIdColumnFK, "&amp;app=".$appCode."&amp;table=".$table_parent, "_self");
+        $proc->importStyleSheet($xslTabel);
+        //$xmlTabel = $proc->transformToXML($xmlPre);
+        $xmlTabel = $proc->transformToXML($xml);
+
+        print ($xmlTabel);
+        print("<br/>");
+    }
+    ?>
+    </ul>
+    <br/>
+    <div style="text-align: right;font-size:8px">
+        [+] <a target='_blank' href='./entityEdit.php?app=_system&table=seed_entity_item_reports'>Add</a>&nbsp;
+    </div>
+    <br/><br/>
+</div>
+    
 </div>
 
 </body>
