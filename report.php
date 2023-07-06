@@ -117,7 +117,10 @@ $query = $query . " LIMIT ".$offset.", ".$no_of_records_per_page.";";
    
    <div class="right">
     <div style="border-style: groove; border-width: 1px; border-radius: 3px; background-color: #ffffdc; padding: 5px">
-        <b><a href="./">&#127968; <?php print($Site); ?></a></b> &gt;
+        <b><a href="./">&#127968; <?php print($Site); ?></a></b> &nbsp; &gt;
+        &nbsp; 
+        <b><a href="./indexApp.php?app=<?php print($appCode); ?>"><?php print($appIcon); ?> <?php print($appName); ?></a></b> &nbsp; &gt;
+        &nbsp; 
         <?php 
         print(substr($reportDescription, 0, 100) . "...&nbsp; " ); 
         
