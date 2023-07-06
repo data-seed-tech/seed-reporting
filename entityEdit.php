@@ -813,14 +813,14 @@ while($row = $result -> fetch_object())
         $query_entity_item_report = str_replace('???', $id_value, $row->sqlReport);
         //print($query_entity_item_report);
         
-        print("<li>". $row->description);
-        print(" <font color=lightgray>[". $query_entity_item_report . "]</font>");
+        //print("<li>". $row->description);
+        print("<li> <span title='". $query_entity_item_report . "'>". $row->description."</span>");
         //$xml = GetXMLfromQuery($conn, $query_entity_item_report, 'items', 'item');
         $xml = GetXMLfromQuery($conn, $query_entity_item_report, 'items', 'item');
         $proc = new XSLTProcessor();
         
         //$xslTabel = GetXSLTable('items', 'item');
-        $xslTabel = GetXSLTable('items', 'item', 'entityEdit.php', $parentIdColumnFK, "&amp;app=".$appCode."&amp;table=".$table_parent, "_self");
+        $xslTabel = GetXSLTable('items', 'item', 'entityEdit.php', $parentIdColumnFK, "&amp;app=".$appCode."&amp;table=".$table_parent, "_self", "", "xml_report");
         $proc->importStyleSheet($xslTabel);
         //$xmlTabel = $proc->transformToXML($xmlPre);
         $xmlTabel = $proc->transformToXML($xml);

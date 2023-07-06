@@ -92,7 +92,8 @@ return $xml_object;
 
 
 
-function GetXSLTable($root_element_name = 'records', $element_name = 'record', $link_address = 'reportItem.php', $link_id = 'id', $parent = '_rapoarte', $link_target='_blank', $action_link = "")
+function GetXSLTable($root_element_name = 'records', $element_name = 'record', $link_address = 'reportItem.php', $link_id = 'id', 
+        $parent = '_rapoarte', $link_target='_blank', $action_link = "", $css_class = "xml_table")
 {
 //la $parent trebuie specificat uneori tableul in care editez curent
 //treaba se face punand &amp;table=
@@ -123,7 +124,7 @@ $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 <xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
    <xsl:output method=\"html\"/>
        <xsl:template match=\"/\">
-            <table class=\"xml_table\">
+            <table class=\"".$css_class."\">
                 <tr>
                     <th>#</th>
                     <xsl:for-each select=\"/" . $root_element_name . "/" . $element_name . "[1]/*\">
