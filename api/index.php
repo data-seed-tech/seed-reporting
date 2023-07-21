@@ -27,6 +27,16 @@ if($table == "")
 }
 //print($table);
 
+/////////////////////////////////////
+//              view               //
+/////////////////////////////////////
+$view  =	@$_GET['view'];
+if($view == "")
+{
+    $view  = @$_POST['view'];
+}
+//print($view);
+
 
 /////////////////////////////////////
 //              report              //
@@ -127,7 +137,7 @@ if($format == "json")
 }
 
 
-if($table == "" && $report == "" && $entityItemReport == "")
+if($table == "" && $report == "" && $view == "" && $entityItemReport == "")
 {
     
     $output = "Service usage: \n"
@@ -232,8 +242,59 @@ if($table != "")
 
         return;
     }
-
 }
+
+
+
+if($view != "")
+{
+    /////////////////////////////////////
+    //              $pk_name           //
+    /////////////////////////////////////
+    //$query = "SELECT COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, COLUMN_KEY, EXTRA, COLUMN_COMMENT
+    //        FROM INFORMATION_SCHEMA.COLUMNS
+    //        WHERE table_schema = '" . $current_schema . "'
+    //            AND table_name = '" . $view . "'
+    //            AND COLUMN_KEY = 'PRI';";
+    
+    
+    $query = "select col.column_name,
+        col.data_type,
+        case when col.character_maximum_length is not null
+             then col.character_maximum_length
+             else col.numeric_precision end as max_length,
+        col.is_nullable
+        from information_schema.columns col
+        join information_schema.views vie on vie.table_schema = col.table_schema
+                                          and vie.table_name = col.table_name
+        where col.table_schema not in ('sys','information_schema',
+                                       'mysql', 'performance_schema')
+        and vie.table_schema = '" . $current_schema . "'
+        and col.table_name = '" . $view . "'
+        and col.ordinal_position = 1;";
+
+
+    //print($query);
+    $result = $conn -> query($query);
+    if($row = $result -> fetch_object())
+    {
+        $pk_name = $row->COLUMN_NAME;
+        //print($pk_name);
+    }
+    elseif($view != "*")
+    {
+        http_response_code(400);
+
+        $rez=array();
+        $rez["records"]=array();
+        array_push($rez["records"], array("error" => "Requested view does not exist! Try using * to retrieve all views!"));
+        echo json_encode($rez);
+
+        return;
+    }
+}
+
+
 
 
 /////////////////////////////////////
@@ -266,6 +327,12 @@ case 'GET':
         getReport($report);
         break;
     }
+    elseif($view != "")
+    {
+        //print($report);
+        getView($limit);
+        break;
+    }
     elseif($entityItemReport != "")
     {
         //print($entityItemReport);
@@ -274,9 +341,11 @@ case 'GET':
     }
     else
     {
-        
+        print("Wrong request!");
+        break;
     }
 case 'POST':
+    
     if(array_key_exists("records", $input_arr))
     /* CONVENTION: INPUT JSON SHOULD HAVE A ROOT NAMED records[] LIKE THIS:
      * 
@@ -421,6 +490,7 @@ function getEntity($limit)
         }
     }
     //print($query);
+    
     
     $result = $conn -> query($query);
     //print_r($result);
@@ -784,6 +854,168 @@ function getReport($report)
     
     echo json_encode($rez);
 }
+
+
+
+
+
+
+
+
+
+function getView($limit)
+{
+    global $conn, $view, $scope, $current_schema, $pk_name, $pk_value, $whereAttr, $whereValue, $whereClause;
+    $rez=array();
+    $rez["records"]=array();
+    
+    
+    
+    if ($view === "*")
+    {
+        $query = "SELECT TABLE_NAME, VIEW_DEFINITION "
+                . "FROM information_schema.views "
+                . "WHERE table_schema = '".$current_schema."' "
+                . "ORDER BY TABLE_NAME;";
+        
+        //$query = "SELECT TABLE_NAME, TABLE_COMMENT 
+        //        FROM information_schema.tables
+        //        WHERE table_schema = '".$current_schema."'
+        //        AND TABLE_COMMENT = 'VIEW'
+        //        ORDER BY TABLE_NAME;"
+    }
+    else
+    {
+        if($scope === "create")
+        {
+            //$query = "SHOW CREATE TABLE ".$table."";
+            $query = "SELECT VIEW_DEFINITION "
+                . "FROM information_schema.views "
+                . "WHERE table_schema = '".$current_schema."' "
+                . "AND TABLE_NAME = '". $view."';";
+        }
+        else
+        {
+            $query = "SELECT * FROM " . $view . "";
+            // filter by primary key:
+            if ($pk_value != "")
+            {
+                $query = $query . " WHERE ".$pk_name." = '" . $pk_value . "'";
+            }
+            
+            // filter by WHERE clause
+            if ($pk_value == "" && $whereAttr != "" && $whereValue != "")
+            {
+                if($whereClause == "")
+                {
+                    $query = $query . " WHERE ".$whereAttr." = '" . $whereValue . "'";
+                }
+                else
+                {
+                    $query = $query . " WHERE ".$whereAttr." LIKE '%" . $whereValue . "%'";
+                }
+            }
+            
+            if ($pk_value != "" && $whereAttr != "" && $whereValue != "")
+            {
+                http_response_code(400);
+                array_push($rez["records"], array("error" => "You cannot filter by both Primary Key and WHERE clause!"));
+                echo json_encode($rez);
+                return;
+            }
+            
+            if ($whereAttr != "" && $whereValue == "")
+            {
+                http_response_code(400);
+                array_push($rez["records"], array("error" => "To use WHERE clause you should specify a whereValue!"));
+                echo json_encode($rez);
+                return;
+            }
+            
+            if ($whereAttr == "" && $whereValue != "")
+            {
+                http_response_code(400);
+                array_push($rez["records"], array("error" => "To use WHERE clause you should specify a whereAttr!"));
+                echo json_encode($rez);
+                return;
+            }
+            
+            if ($whereAttr == "" && $whereValue == "" && $whereClause != "")
+            {
+                http_response_code(400);
+                array_push($rez["records"], array("error" => "To use WHERE clause you should specify a whereAttr and a whereValue!"));
+                echo json_encode($rez);
+                return;
+            }
+            
+            if ($whereClause != "" && $whereClause != "LIKE" && $whereClause != "EQUAL")
+            {
+                http_response_code(400);
+                array_push($rez["records"], array("error" => "To use WHERE clause may be EQUAL or LIKE!"));
+                echo json_encode($rez);
+                return;
+            }
+            
+            
+            // limit clause
+            if ($limit != "")
+            {
+                $query = $query . " LIMIT ".$limit.";";
+            }
+        }
+    }
+    //print($query);
+    
+    
+    $result = $conn -> query($query);
+    //print_r($result);
+        
+    $num = 0;
+    if(!$result)
+    {
+        http_response_code(400);
+        //array_push($rez["records"], array("error" => "Wrong clauses combination. No results returned!"));
+        array_push($rez["records"], array("error" => mysqli_error($conn)));
+        echo json_encode($rez);
+        return;
+    }
+    else
+    {
+        $num = $result->num_rows;
+    }
+    
+    if($num > 0)
+    {
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)){
+            // extract row:
+            // this will make $row['name'] to just $name only extract($row);
+            //print_r($row);
+            //print_r(array_keys($row));
+            
+            $item =$row;
+
+            array_push($rez["records"], $item);
+        }
+
+        http_response_code(200);
+    }
+    else
+    {
+        http_response_code(404);
+
+        $item = array("warning" => "No records found.");
+        array_push($rez["records"], $item);
+    }
+    
+    echo json_encode($rez);
+}
+
+
+
+
+
+
+
 
 
 
