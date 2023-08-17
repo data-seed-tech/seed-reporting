@@ -5,6 +5,14 @@ require_once("./counter.inc");
 $appCode  = "";
 $table = "";
 
+/////////////////////////////////////
+//          current_schema         //
+/////////////////////////////////////
+$query = "SELECT DATABASE() as current_schema;";
+$result = $conn -> query($query);
+$row = $result -> fetch_object();
+$current_schema  = $row -> current_schema;
+
 ?>
 
 <html>
@@ -27,7 +35,8 @@ $table = "";
     
     <div class="right">
     
-    <b>DATA-SEED Apps</b>
+        <div class='descriere' title="<?php print($current_schema); ?>">&#9881; DATA-SEED Apps</div>
+
     <br/><br/>
         
     <?php
@@ -58,8 +67,9 @@ $table = "";
     ///////////////////////////////////////////////
     //require_once("reports.inc");
     ?>
+    </div>
 </div>
-    
+
 </body>
 </html>
 
